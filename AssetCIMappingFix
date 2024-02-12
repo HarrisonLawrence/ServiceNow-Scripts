@@ -1,5 +1,5 @@
-var assetToFix = '084550bb6f7c9a401ca47b11be3ee4d1';
-var ciToSet = '4065d0bb6f7c9a401ca47b11be3ee455';
+var assetToFix = 'XXXXX';
+var ciToSet = 'XXXXX';
 
 new GlideQuery('alm_hardware')
     .where('sys_id', assetToFix )
