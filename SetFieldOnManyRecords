@@ -1,8 +1,8 @@
 //Set these fields
-var sourceTable = "alm_hardware";
-var fieldName = "model_category";
-var oldValue = "926bc5846faa450061b29b9eae3ee419";
-var newValue = "dc69a7d4db15c6502d626fccd3961905";
+var sourceTable = "XXXXXX";
+var fieldName = "YYYYYY";
+var oldValue = "ZZZZZZ";
+var newValue = "AAAAAA";
 
 
 var recordList = new GlideRecord(sourceTable);
