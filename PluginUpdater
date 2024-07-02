@@ -1,0 +1,34 @@
+//This script updates all plugins available in the store that one could normally update manually.
+//It also references a system property by sysID that contains a skip list of plugin IDs so that those plugins are not automatically updated.
+
+
+//First, query a list of all plugins that can be updated.
+var availPlugins = new GlideRecord('sys_store_app');
+availPlugins.addEncodedQuery('hide_on_ui=false^update_available=True');
+availPlugins.query();
+
+gs.log('Starting plugin update cycle','Plugin Update Process');
+
+
+//Second, define variables, pull skip list from properties
+var skipProperty = new GlideRecord('sys_properties');
+skipProperty.get('06fe09951b528e10c8e062007e4bcb3b');
+
+var skipList = skipProperty.value;
+var report = 'Plugin update report: \n';
+var worker = new sn_appclient.AppUpgrader();
+
+
+//Third, loop through all plugins to update them while skipping plugins listed on the skip list
+while(availPlugins.next()){
+	if(skipList.indexOf(availPlugins.source) == -1){
+		report = report.concat('Updated ' + availPlugins.source) + ' from ' + availPlugins.version + ' to ' + availPlugins.latest_version + '\n';
+		worker.upgrade(availPlugins.sys_id.toString(), availPlugins.latest_version, false);
+	} else {
+		report = report.concat('Skipped ' + availPlugins.source) + '\n';
+	}
+}
+
+
+//Fourth, send report to sys_log
+gs.log(report,'Plugin Update Process');
