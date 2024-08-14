@@ -1,6 +1,5 @@
-//Finds a record anywhere in ServiceNow on any table.
+//Finds a record anywhere in ServiceNow on any table using the sysID.
 //(Slightly) adapted from https://snprotips.com/blog/sncprotips/2015/12/locate-any-record-in-any-table-by-sysidhtml
-//Change getHTML to true if looking for a clickable link. Does not work when running as a background script.
 
 function findAnywhere(sysIDToFind) {
 
