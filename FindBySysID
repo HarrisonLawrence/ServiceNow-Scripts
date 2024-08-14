@@ -2,10 +2,8 @@
 //(Slightly) adapted from https://snprotips.com/blog/sncprotips/2015/12/locate-any-record-in-any-table-by-sysidhtml
 //Change getHTML to true if looking for a clickable link. Does not work when running as a background script.
 
-function findAnywhere(sysIDToFind, getHTML) {
-    if (getHTML !== true && getHTML !== 'true') {
-        getHTML = false;
-    }
+function findAnywhere(sysIDToFind) {
+
     var grCheck;
     var tableName;
     var url = gs.getProperty('glide.servlet.uri');
@@ -18,11 +16,8 @@ function findAnywhere(sysIDToFind, getHTML) {
         grCheck = new GlideRecord(tableName);
         if (grCheck.get(sysIDToFind)) {
             url += tableName + '.do?sys_id=' + sysIDToFind;
-            if (getHTML) {
-                url = '<a href="' + url + '">' + url + '</a>';
-            }
             return url;
         }
     }
 }
-gs.print(findAnywhere('SYSIDHERE', false));
+gs.print(findAnywhere('SYSIDHERE'));
