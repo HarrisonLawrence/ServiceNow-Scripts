@@ -11,10 +11,7 @@ gs.log('Starting plugin update cycle','Plugin Update Process');
 
 
 //Second, define variables, pull skip list from properties
-var skipProperty = new GlideRecord('sys_properties');
-skipProperty.get('06fe09951b528e10c8e062007e4bcb3b');
-
-var skipList = skipProperty.value;
+var skipList = gs.getProperty('plugin.upgrade.skipList');
 var report = 'Plugin update report: \n';
 var worker = new sn_appclient.AppUpgrader();
 
