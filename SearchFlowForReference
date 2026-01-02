@@ -1,0 +1,13 @@
+var queryString = 'd01fb8f31b1d8510a7e236d5464bcb67';
+var flowVariables = new GlideRecord('sys_hub_action_instance_v2');
+flowVariables.addEncodedQuery('valuesISNOTEMPTY');
+flowVariables.query();
+
+gs.print(flowVariables.getRowCount());
+
+while (flowVariables.next()) {
+    if(new global.VAGlobalUtil().getDecompressedValue(flowVariables.values).includes(queryString)){
+		gs.print(flowVariables.sys_id + '\n' + flowVariables.flow.name);
+		gs.print('Step ' + flowVariables.order + ' https://beamprod.service-now.com/now/workflow-studio/builder?table=sys_hub_flow&sysId=' + flowVariables.flow.sys_id);
+	}
+}
