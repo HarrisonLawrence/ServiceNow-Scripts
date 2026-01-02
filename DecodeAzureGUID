@@ -1,0 +1,65 @@
+/*
+ * Convert Active Directory ImmutableID (Base64 of objectGUID) to an Azure GUID string.
+ * Compatible with ServiceNow server-side (Rhino) and GlideStringUtil.
+ *
+ * How it works:
+ * 1) Decode Base64 to bytes (16 bytes expected).
+ * 2) Reorder bytes from AD little-endian fields to Azure GUID standard:
+ *    - Reverse first 4 bytes (Data1)
+ *    - Reverse next 2 bytes (Data2)
+ *    - Reverse next 2 bytes (Data3)
+ *    - Keep last 8 bytes as-is (Data4)
+ * 3) Output lowercase GUID with hyphens.
+ */
+
+// ----- Input: ImmutableID (Base64 string) -----
+var base64GuidString = "REPLACEME";
+gs.print("Encoded (ImmutableID) Base64: " + base64GuidString);
+
+// ----- Decode Base64 into raw bytes (Java byte[]) -----
+var bytes = null;
+bytes = GlideStringUtil.base64DecodeAsBytes(base64GuidString);
+
+// Validate length
+if (!bytes || bytes.length !== 16) {
+    gs.print("Decoded bytes length is incorrect. Expected 16 bytes, got " + (bytes ? bytes.length : 0));
+    // Stop execution if not 16
+    (function() {
+        return;
+    })();
+}
+
+// Helper to normalize signed Java bytes to 0..255
+function ub(i) {
+    return bytes[i] & 0xFF;
+}
+
+// ----- Reorder from AD (little-endian fields) to Azure GUID standard -----
+var reordered = [
+    ub(3), ub(2), ub(1), ub(0), // Data1 (4 bytes reversed)
+    ub(5), ub(4), // Data2 (2 bytes reversed)
+    ub(7), ub(6), // Data3 (2 bytes reversed)
+    ub(8), ub(9), ub(10), ub(11), ub(12), ub(13), ub(14), ub(15) // Data4 (8 bytes as-is)
+];
+
+// ----- Convert to hex with zero padding -----
+function toHexByte(n) {
+    var h = (n & 0xFF).toString(16);
+    return h.padStart(2, "0");
+}
+var hex = "";
+for (var j = 0; j < reordered.length; j++) {
+    hex += toHexByte(reordered[j]);
+}
+hex = hex.toLowerCase(); // Azure is case-insensitive; lowercase is conventional.
+
+// ----- Format as GUID -----
+var guid =
+    hex.substring(0, 8) + "-" +
+    hex.substring(8, 12) + "-" +
+    hex.substring(12, 16) + "-" +
+    hex.substring(16, 20) + "-" +
+    hex.substring(20, 32);
+
+// ----- Output -----
+gs.print("Decoded GUID: " + guid);
