@@ -1,6 +1,5 @@
 /*
  * Convert Active Directory ImmutableID (Base64 of objectGUID) to an Azure GUID string.
- * Compatible with ServiceNow server-side (Rhino) and GlideStringUtil.
  *
  * How it works:
  * 1) Decode Base64 to bytes (16 bytes expected).
