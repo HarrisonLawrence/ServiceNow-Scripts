@@ -28,18 +28,18 @@ while (grSUHL.next()) {
     grStoreApp.get('sys_code', grPlugin.source);
     if (grStoreApp.sys_id) {
         message += '\nStore App: ' + grStoreApp.sys_id;
-		  if (grStoreApp.getValue('private') == 1){
-        // If there is a store app and the app is listed as private, review the skip record.
-			  message += '\nPrivate: True';
-			  message += '\nReviewed Upgrade Details';
-			  grSUHL.resolution_status = 'reviewed';
-			  grSUHL.update();
-		  }else {
-			  message += '\nPrivate: False';
-		  }
+        if (grStoreApp.getValue('private') == 1) {
+            // If there is a store app and the app is listed as private, review the skip record.
+            message += '\nPrivate: True';
+            message += '\nReviewed Upgrade Details';
+            grSUHL.resolution_status = 'reviewed';
+            grSUHL.update();
+        } else {
+            message += '\nPrivate: False';
+        }
     } else {
-		message += '\nNo Store app found';
-	}
-  message += '\n\n';
-  gs.print(message);
+        message += '\nNo Store app found';
+    }
+    message += '\n\n';
+    gs.print(message);
 }
