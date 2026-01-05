@@ -1,0 +1,47 @@
+//////////////////////////////////////////////////////////////
+// This script goes through all the skipped records for the //
+// upgrade listed on the first line. If the related plugin  //
+// is private then the upgrade can be skipped because the   //
+// record can't be updated anyway.                          //
+//////////////////////////////////////////////////////////////
+
+
+
+var upgradeSysID = '2a4c0f20c3123210bc043b1f050131ab'; // CHANGE THIS VALUE
+
+// Look for skipped records that haven't been reviewed yet.
+var grSUHL = new GlideRecord('sys_upgrade_history_log');
+grSUHL.addEncodedQuery('upgrade_history=' + upgradeSysID);
+grSUHL.addEncodedQuery('dispositionIN4,5,104,105,9,10^changed=true^ORdisposition=9^resolution_status=not_reviewed^ORresolution_status=');
+grSUHL.query();
+
+// Go through each of the skipped records.
+while (grSUHL.next()) {
+    var message = '';
+    message += 'File name = ' + grSUHL.file_name;
+    // Check to see if there's a plugin related to this file
+    var grPlugin = new GlideRecord('sys_plugins');
+    grPlugin.get('source', grSUHL.plugin);
+    message += '\nPlugin ID: ' + grPlugin.sys_id;
+    message += '\nPlugin Name: ' + grPlugin.name;
+
+    // Check to see if there's a store app related to this plugin
+    var grStoreApp = new GlideRecord('sys_store_app');
+    grStoreApp.get('sys_code', grPlugin.source);
+    if (grStoreApp.sys_id) {
+        message += '\nStore App: ' + grStoreApp.sys_id;
+		  if (grStoreApp.getValue('private') == 1){
+        // If there is a store app and the app is listed as private, review the skip record.
+			  message += '\nPrivate: True';
+			  message += '\nReviewed Upgrade Details';
+			  grSUHL.resolution_status = 'reviewed';
+			  grSUHL.update();
+		  }else {
+			  message += '\nPrivate: False';
+		  }
+    } else {
+		message += '\nNo Store app found';
+	}
+  message += '\n\n';
+  gs.print(message);
+}
