@@ -5,8 +5,6 @@
 // record can't be updated anyway.                          //
 //////////////////////////////////////////////////////////////
 
-
-
 var upgradeSysID = '2a4c0f20c3123210bc043b1f050131ab'; // CHANGE THIS VALUE
 
 // Look for skipped records that haven't been reviewed yet.
