@@ -1,3 +1,6 @@
+// This script checks for in flow variables for a certain string. 
+// I generally use this script to look for flows that reference a group before deactivating the group.
+
 var queryString = 'REPLACEME';
 var instanceName = gs.getProperty('instance_name');
 var flowVariables = new GlideRecord('sys_hub_action_instance_v2');
